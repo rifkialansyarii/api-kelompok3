@@ -29,9 +29,9 @@ echo "Building Docker containers..."
 docker compose -f docker-compose-prod.yml build --no-cache
 
 echo "Issue Certificate for SSL..."
-docker compose run --rm certbot certonly \ 
+docker compose -f docker-compose-prod.yml run --rm certbot certonly \ 
     --webroot -w /var/www/certbot \ 
-    -d api-pegawai-4a.akufarish.my.id \
+    -d api-mahasiswa-4a.akufarish.my.id \
     --email $EMAIL \
     --agree-tos \
     --no-eff-email
