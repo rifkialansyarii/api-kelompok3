@@ -30,7 +30,7 @@ fi
 echo "Issue Certificate for SSL..."
 cp $NGINX_CONF_DIR/default.base.conf $NGINX_CONF_DIR/default.prod.conf
 
-docker compose -f docker-compose.prod.yml up nginx -d
+docker compose -f docker-compose-prod.yml up nginx -d
 
 sleep 3
 
@@ -44,7 +44,7 @@ docker compose -f docker-compose-prod.yml run --rm certbot certonly --webroot \
 
 if [ -d "$DATA_PATH/live/$DOMAIN" ]; then
     echo "execute HTTPS Config Nginx"
-    cp $NGINX_CONF_DIR/default.https.conf $NGINX_CONF_DIR/default.prod.conf
+    cp $NGINX_CONF_DIR/default.https.conf $NGINX_CONF_DIR/default-prod.conf
 else
     echo "[ERROR] Failed to issue certificate"
     exit 1
