@@ -13,6 +13,11 @@ class KrsDetail extends Model
         'id_krs', 'mk_kode'
     ];
 
-    const CREATED_AT = 'created_at';
-    const UPDATED_AT = null;
+    // const CREATED_AT = 'created_at';
+    // const UPDATED_AT = null;
+
+    public function krs()
+    {
+        return $this->belongsTo(Krs::class, 'id_krs', 'id_krs');
+    }
 }

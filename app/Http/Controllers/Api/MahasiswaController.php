@@ -4,6 +4,7 @@ namespace App\Http\Controllers\Api;
 
 use App\Http\Controllers\Controller;
 use App\Models\Mahasiswa;
+use App\Http\Resources\MahasiswaResource;
 use Illuminate\Http\Request;
 
 class MahasiswaController extends Controller
@@ -19,7 +20,7 @@ class MahasiswaController extends Controller
 
         return response()->json([
             'success' => true,
-            'data' => $mahasiswa
+            'data' => MahasiswaResource::collection($mahasiswa)
         ]);
     }
 
@@ -30,7 +31,7 @@ class MahasiswaController extends Controller
         return response()->json([
             'success' => true,
             'message' => 'Mahasiswa berhasil ditambahkan',
-            'data' => $mahasiswa
+            'data' => new MahasiswaResource($mahasiswa)
         ], 201);
     }
 
@@ -62,7 +63,7 @@ class MahasiswaController extends Controller
 
         return response()->json([
             'success' => true,
-            'data' => $mahasiswa
+            'data' => new MahasiswaResource($mahasiswa)
         ]);
     }
 
@@ -88,11 +89,12 @@ class MahasiswaController extends Controller
         }
 
         $mahasiswa->update($request->all());
+        $mahasiswa->load(['biodata', 'alamat', 'orangTuaWali', 'sekolah']);
 
         return response()->json([
             'success' => true,
             'message' => 'Data mahasiswa berhasil diperbarui',
-            'data' => $mahasiswa
+            'data' => new MahasiswaResource($mahasiswa)
         ]);
     }
 

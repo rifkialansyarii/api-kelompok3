@@ -1,13 +1,15 @@
 <?php
 namespace App\Models;
 
+use Illuminate\Database\Eloquent\Concerns\HasUuids;
 use Illuminate\Database\Eloquent\Model;
 
 class Mahasiswa extends Model
 {
+    use HasUuids;
     public $timestamps = false;
     protected $table = 'mahasiswa';
-    protected $primaryKey = 'id_mahasiswa';
+    // protected $primaryKey = 'id_mahasiswa';
 
     protected $fillable = [
         'nim', 'nama_mahasiswa', 'periode_masuk', 'tahun_kurikulum',
