@@ -14,10 +14,15 @@ jobs:
           host: ${{ secrets.VPS_HOST }}
           username: root
           key: ${{ secrets.VPS_KELOMPOK3 }}
-          script: 
+          script: |
             cd /root/kelompok3/api-kelompok3
+
             git stash
+
             git pull origin main
+
             docker compose -f docker-compose-prod.yml exec -T php composer install --no-interaction --prefer-dist --optimize-autoloader
+            
             docker compose -f docker-compose-prod.yml exec -T php php artisan migrate --force
+            
             docker compose -f docker-compose-prod.yml exec -T php php artisan optimize:clear
