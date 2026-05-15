@@ -3,8 +3,7 @@ name: Deploy API to PBL VPS KELOMPOK 3
 on:
   push:
     branches:
-      
-main
+      - main
 jobs:
   deploy-to-vps-pbl:
     runs-on: ubuntu-latest
