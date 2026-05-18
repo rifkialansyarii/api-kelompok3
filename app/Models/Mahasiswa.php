@@ -13,7 +13,7 @@ class Mahasiswa extends Model
 
     protected $fillable = [
         'nim', 'nama_mahasiswa', 'periode_masuk', 'tahun_kurikulum',
-        'status_mahasiswa', 'kelas_kelompok', 'jurusan', 'prodi',
+        'status_mahasiswa', 'kelas_kelompok', 'jurusan_id', 'prodi_id',
         'jalur_pendaftaran', 'gelombang', 'tanggal_awal_masuk',
         'tanggal_daftar_ulang', 'is_kebutuhan_khusus'
     ];
