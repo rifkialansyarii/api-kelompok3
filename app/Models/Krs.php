@@ -9,7 +9,7 @@ class Krs extends Model
     protected $primaryKey = 'id_krs';
 
     protected $fillable = [
-        'id_mahasiswa', 'tahun_akademik_kode', 'semester_saat_ini',
+        'id_mahasiswa', 'tahunakademik_id', 'semester_saat_ini',
         'batas_total_sks', 'status_krs', 'catatan_pembimbing'
     ];
 

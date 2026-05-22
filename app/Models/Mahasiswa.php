@@ -12,8 +12,8 @@ class Mahasiswa extends Model
     protected $primaryKey = 'id_mahasiswa';
 
     protected $fillable = [
-        'nim', 'nama_mahasiswa', 'periode_masuk', 'tahun_kurikulum',
-        'status_mahasiswa', 'kelas_kelompok', 'jurusan_id', 'prodi_id',
+        'nim', 'nama_mahasiswa', 'tahunakademik_id', 'kurikulum_kode',
+        'id_keuangan_mhs', 'id_dosen', 'jurusan_id', 'prodi_id',
         'jalur_pendaftaran', 'gelombang', 'tanggal_awal_masuk',
         'tanggal_daftar_ulang', 'is_kebutuhan_khusus'
     ];
