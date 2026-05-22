@@ -11,7 +11,7 @@ class KrsResource extends JsonResource
         return [
             'id_krs' => $this->id_krs,
             'id_mahasiswa' => $this->id_mahasiswa,
-            'tahun_akademik_id' => $this->tahun_akademik_id,
+            'tahunakademik_id' => $this->tahunakademik_id,
             'semester_saat_ini' => $this->semester_saat_ini,
             'batas_total_sks' => $this->batas_total_sks,
             'status_krs' => $this->status_krs,

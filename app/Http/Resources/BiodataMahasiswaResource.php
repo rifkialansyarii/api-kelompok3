@@ -25,7 +25,7 @@ class BiodataMahasiswaResource extends JsonResource
             'kepemilikan' => $this->kepemilikan,
             'email_kampus' => $this->email_kampus,
             'email_pribadi' => $this->email_pribadi,
-            'kewarganegaraan' => $this->kewarganegaraan,
+            'id_negara' => $this->id_negara,
             'nik' => $this->nik,
             'paspor' => $this->paspor,
             'no_kk' => $this->no_kk,
