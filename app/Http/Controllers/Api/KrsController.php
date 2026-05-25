@@ -3,22 +3,25 @@
 namespace App\Http\Controllers\Api;
 
 use App\Http\Controllers\Controller;
+use App\Models\Mahasiswa;
 use App\Models\Krs;
 use App\Models\KrsDetail;
 use Illuminate\Http\Request;
 
 class KrsController extends Controller
 {
-    public function index(Request $request, $id)
+    public function index(Request $request, $nim)
     {
-        if ($request->jwt_role === 'mahasiswa' && $request->jwt_detail_id != $id) {
+        $mahasiswa = Mahasiswa::where('nim', $nim)->firstOrFail();
+
+        if ($request->jwt_role === 'mahasiswa' && $request->jwt_detail_id != $mahasiswa->id_mahasiswa) {
             return response()->json([
                 'success' => false,
                 'message' => 'Akses ditolak'
             ], 403);
         }
 
-        $krs = Krs::where('id_mahasiswa', $id)
+        $krs = Krs::where('id_mahasiswa', $mahasiswa->id_mahasiswa)
             ->with('detail')
             ->get();
 
@@ -28,9 +31,11 @@ class KrsController extends Controller
         ]);
     }
 
-    public function store(Request $request, $id)
+    public function store(Request $request, $nim)
     {
-        if ($request->jwt_role === 'mahasiswa' && $request->jwt_detail_id != $id) {
+        $mahasiswa = Mahasiswa::where('nim', $nim)->firstOrFail();
+
+        if ($request->jwt_role === 'mahasiswa' && $request->jwt_detail_id != $mahasiswa->id_mahasiswa) {
             return response()->json([
                 'success' => false,
                 'message' => 'Akses ditolak'
@@ -38,7 +43,7 @@ class KrsController extends Controller
         }
 
         $data = $request->all();
-        $data['id_mahasiswa'] = $id;
+        $data['id_mahasiswa'] = $mahasiswa->id_mahasiswa;
 
         $krs = Krs::create($data);
 
@@ -48,16 +53,18 @@ class KrsController extends Controller
         ], 201);
     }
 
-    public function show(Request $request, $id, $id_krs)
+    public function show(Request $request, $nim, $id_krs)
     {
-        if ($request->jwt_role === 'mahasiswa' && $request->jwt_detail_id != $id) {
+        $mahasiswa = Mahasiswa::where('nim', $nim)->firstOrFail();
+
+        if ($request->jwt_role === 'mahasiswa' && $request->jwt_detail_id != $mahasiswa->id_mahasiswa) {
             return response()->json([
                 'success' => false,
                 'message' => 'Akses ditolak'
             ], 403);
         }
 
-        $krs = Krs::where('id_mahasiswa', $id)
+        $krs = Krs::where('id_mahasiswa', $mahasiswa->id_mahasiswa)
             ->where('id_krs', $id_krs)
             ->with('detail')
             ->first();
@@ -75,16 +82,18 @@ class KrsController extends Controller
         ]);
     }
 
-    public function update(Request $request, $id, $id_krs)
+    public function update(Request $request, $nim, $id_krs)
     {
-        if ($request->jwt_role === 'mahasiswa' && $request->jwt_detail_id != $id) {
+        $mahasiswa = Mahasiswa::where('nim', $nim)->firstOrFail();
+
+        if ($request->jwt_role === 'mahasiswa' && $request->jwt_detail_id != $mahasiswa->id_mahasiswa) {
             return response()->json([
                 'success' => false,
                 'message' => 'Akses ditolak'
             ], 403);
         }
 
-        $krs = Krs::where('id_mahasiswa', $id)
+        $krs = Krs::where('id_mahasiswa', $mahasiswa->id_mahasiswa)
             ->where('id_krs', $id_krs)
             ->first();
 
@@ -103,9 +112,11 @@ class KrsController extends Controller
         ]);
     }
 
-    public function destroy(Request $request, $id, $id_krs)
+    public function destroy(Request $request, $nim, $id_krs)
     {
-        $krs = Krs::where('id_mahasiswa', $id)
+        $mahasiswa = Mahasiswa::where('nim', $nim)->firstOrFail();
+
+        $krs = Krs::where('id_mahasiswa', $mahasiswa->id_mahasiswa)
             ->where('id_krs', $id_krs)
             ->first();
 
@@ -124,9 +135,11 @@ class KrsController extends Controller
         ]);
     }
 
-    public function detailIndex(Request $request, $id, $id_krs)
+    public function detailIndex(Request $request, $nim, $id_krs)
     {
-        if ($request->jwt_role === 'mahasiswa' && $request->jwt_detail_id != $id) {
+        $mahasiswa = Mahasiswa::where('nim', $nim)->firstOrFail();
+
+        if ($request->jwt_role === 'mahasiswa' && $request->jwt_detail_id != $mahasiswa->id_mahasiswa) {
             return response()->json([
                 'success' => false,
                 'message' => 'Akses ditolak'
@@ -141,9 +154,11 @@ class KrsController extends Controller
         ]);
     }
 
-    public function detailStore(Request $request, $id, $id_krs)
+    public function detailStore(Request $request, $nim, $id_krs)
     {
-        if ($request->jwt_role === 'mahasiswa' && $request->jwt_detail_id != $id) {
+        $mahasiswa = Mahasiswa::where('nim', $nim)->firstOrFail();
+
+        if ($request->jwt_role === 'mahasiswa' && $request->jwt_detail_id != $mahasiswa->id_mahasiswa) {
             return response()->json([
                 'success' => false,
                 'message' => 'Akses ditolak'
@@ -161,9 +176,11 @@ class KrsController extends Controller
         ], 201);
     }
 
-    public function detailDestroy(Request $request, $id, $id_krs, $id_detail)
+    public function detailDestroy(Request $request, $nim, $id_krs, $id_detail)
     {
-        if ($request->jwt_role === 'mahasiswa' && $request->jwt_detail_id != $id) {
+        $mahasiswa = Mahasiswa::where('nim', $nim)->firstOrFail();
+
+        if ($request->jwt_role === 'mahasiswa' && $request->jwt_detail_id != $mahasiswa->id_mahasiswa) {
             return response()->json([
                 'success' => false,
                 'message' => 'Akses ditolak'

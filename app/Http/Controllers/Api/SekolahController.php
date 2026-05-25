@@ -3,21 +3,24 @@
 namespace App\Http\Controllers\Api;
 
 use App\Http\Controllers\Controller;
+use App\Models\Mahasiswa;
 use App\Models\SekolahMahasiswa;
 use Illuminate\Http\Request;
 
 class SekolahController extends Controller
 {
-    public function show(Request $request, $id)
+    public function show(Request $request, $nim)
     {
-        if ($request->jwt_role === 'mahasiswa' && $request->jwt_detail_id != $id) {
+        $mahasiswa = Mahasiswa::where('nim', $nim)->firstOrFail();
+
+        if ($request->jwt_role === 'mahasiswa' && $request->jwt_detail_id != $mahasiswa->id_mahasiswa) {
             return response()->json([
                 'success' => false,
                 'message' => 'Akses ditolak'
             ], 403);
         }
 
-        $sekolah = SekolahMahasiswa::where('id_mahasiswa', $id)->first();
+        $sekolah = SekolahMahasiswa::where('id_mahasiswa', $mahasiswa->id_mahasiswa)->first();
 
         if (!$sekolah) {
             return response()->json([
@@ -32,10 +35,12 @@ class SekolahController extends Controller
         ]);
     }
 
-    public function store(Request $request, $id)
+    public function store(Request $request, $nim)
     {
+        $mahasiswa = Mahasiswa::where('nim', $nim)->firstOrFail();
+
         $data = $request->all();
-        $data['id_mahasiswa'] = $id;
+        $data['id_mahasiswa'] = $mahasiswa->id_mahasiswa;
 
         $sekolah = SekolahMahasiswa::create($data);
 
@@ -45,16 +50,18 @@ class SekolahController extends Controller
         ], 201);
     }
 
-    public function update(Request $request, $id)
+    public function update(Request $request, $nim)
     {
-        if ($request->jwt_role === 'mahasiswa' && $request->jwt_detail_id != $id) {
+        $mahasiswa = Mahasiswa::where('nim', $nim)->firstOrFail();
+
+        if ($request->jwt_role === 'mahasiswa' && $request->jwt_detail_id != $mahasiswa->id_mahasiswa) {
             return response()->json([
                 'success' => false,
                 'message' => 'Akses ditolak'
             ], 403);
         }
 
-        $sekolah = SekolahMahasiswa::where('id_mahasiswa', $id)->first();
+        $sekolah = SekolahMahasiswa::where('id_mahasiswa', $mahasiswa->id_mahasiswa)->first();
 
         if (!$sekolah) {
             return response()->json([
@@ -71,9 +78,11 @@ class SekolahController extends Controller
         ]);
     }
 
-    public function destroy(Request $request, $id)
+    public function destroy(Request $request, $nim)
     {
-        $sekolah = SekolahMahasiswa::where('id_mahasiswa', $id)->first();
+        $mahasiswa = Mahasiswa::where('nim', $nim)->firstOrFail();
+
+        $sekolah = SekolahMahasiswa::where('id_mahasiswa', $mahasiswa->id_mahasiswa)->first();
 
         if (!$sekolah) {
             return response()->json([

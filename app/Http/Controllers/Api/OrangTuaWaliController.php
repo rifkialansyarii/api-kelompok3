@@ -3,21 +3,24 @@
 namespace App\Http\Controllers\Api;
 
 use App\Http\Controllers\Controller;
+use App\Models\Mahasiswa;
 use App\Models\OrangTuaWali;
 use Illuminate\Http\Request;
 
 class OrangTuaWaliController extends Controller
 {
-    public function index(Request $request, $id)
+    public function index(Request $request, $nim)
     {
-        if ($request->jwt_role === 'mahasiswa' && $request->jwt_detail_id != $id) {
+        $mahasiswa = Mahasiswa::where('nim', $nim)->firstOrFail();
+
+        if ($request->jwt_role === 'mahasiswa' && $request->jwt_detail_id != $mahasiswa->id_mahasiswa) {
             return response()->json([
                 'success' => false,
                 'message' => 'Akses ditolak'
             ], 403);
         }
 
-        $ortu = OrangTuaWali::where('id_mahasiswa', $id)->get();
+        $ortu = OrangTuaWali::where('id_mahasiswa', $mahasiswa->id_mahasiswa)->get();
 
         return response()->json([
             'success' => true,
@@ -25,10 +28,12 @@ class OrangTuaWaliController extends Controller
         ]);
     }
 
-    public function store(Request $request, $id)
+    public function store(Request $request, $nim)
     {
+        $mahasiswa = Mahasiswa::where('nim', $nim)->firstOrFail();
+
         $data = $request->all();
-        $data['id_mahasiswa'] = $id;
+        $data['id_mahasiswa'] = $mahasiswa->id_mahasiswa;
 
         $ortu = OrangTuaWali::create($data);
 
@@ -38,16 +43,18 @@ class OrangTuaWaliController extends Controller
         ], 201);
     }
 
-    public function update(Request $request, $id, $id_ortu)
+    public function update(Request $request, $nim, $id_ortu)
     {
-        if ($request->jwt_role === 'mahasiswa' && $request->jwt_detail_id != $id) {
+        $mahasiswa = Mahasiswa::where('nim', $nim)->firstOrFail();
+
+        if ($request->jwt_role === 'mahasiswa' && $request->jwt_detail_id != $mahasiswa->id_mahasiswa) {
             return response()->json([
                 'success' => false,
                 'message' => 'Akses ditolak'
             ], 403);
         }
 
-        $ortu = OrangTuaWali::where('id_mahasiswa', $id)
+        $ortu = OrangTuaWali::where('id_mahasiswa', $mahasiswa->id_mahasiswa)
             ->where('id_ortu_wali', $id_ortu)
             ->first();
 
@@ -66,9 +73,11 @@ class OrangTuaWaliController extends Controller
         ]);
     }
 
-    public function destroy(Request $request, $id, $id_ortu)
+    public function destroy(Request $request, $nim, $id_ortu)
     {
-        $ortu = OrangTuaWali::where('id_mahasiswa', $id)
+        $mahasiswa = Mahasiswa::where('nim', $nim)->firstOrFail();
+
+        $ortu = OrangTuaWali::where('id_mahasiswa', $mahasiswa->id_mahasiswa)
             ->where('id_ortu_wali', $id_ortu)
             ->first();
 

@@ -35,11 +35,13 @@ class MahasiswaController extends Controller
         ], 201);
     }
 
-    public function show(Request $request, $id)
+    public function show(Request $request, $nim)
     {
+        $mahasiswa = Mahasiswa::where('nim', $nim)->firstOrFail();
+
         if (
             $request->jwt_role === 'mahasiswa' &&
-            $request->jwt_detail_id != $id
+            $request->jwt_detail_id != $mahasiswa->id_mahasiswa
         ) {
             return response()->json([
                 'success' => false,
@@ -47,19 +49,12 @@ class MahasiswaController extends Controller
             ], 403);
         }
 
-        $mahasiswa = Mahasiswa::with([
+        $mahasiswa->load([
             'biodata',
             'alamat',
             'orangTuaWali',
             'sekolah'
-        ])->find($id);
-
-        if (!$mahasiswa) {
-            return response()->json([
-                'success' => false,
-                'message' => 'Mahasiswa tidak ditemukan'
-            ], 404);
-        }
+        ]);
 
         return response()->json([
             'success' => true,
@@ -67,25 +62,18 @@ class MahasiswaController extends Controller
         ]);
     }
 
-    public function update(Request $request, $id)
+    public function update(Request $request, $nim)
     {
+        $mahasiswa = Mahasiswa::where('nim', $nim)->firstOrFail();
+
         if (
             $request->jwt_role === 'mahasiswa' &&
-            $request->jwt_detail_id != $id
+            $request->jwt_detail_id != $mahasiswa->id_mahasiswa
         ) {
             return response()->json([
                 'success' => false,
                 'message' => 'Akses ditolak'
             ], 403);
-        }
-
-        $mahasiswa = Mahasiswa::find($id);
-
-        if (!$mahasiswa) {
-            return response()->json([
-                'success' => false,
-                'message' => 'Mahasiswa tidak ditemukan'
-            ], 404);
         }
 
         $mahasiswa->update($request->all());
@@ -98,16 +86,9 @@ class MahasiswaController extends Controller
         ]);
     }
 
-    public function destroy($id)
+    public function destroy($nim)
     {
-        $mahasiswa = Mahasiswa::find($id);
-
-        if (!$mahasiswa) {
-            return response()->json([
-                'success' => false,
-                'message' => 'Mahasiswa tidak ditemukan'
-            ], 404);
-        }
+        $mahasiswa = Mahasiswa::where('nim', $nim)->firstOrFail();
 
         $mahasiswa->delete();
 

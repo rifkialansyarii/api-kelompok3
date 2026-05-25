@@ -3,15 +3,17 @@
 namespace App\Http\Controllers\Api;
 
 use App\Http\Controllers\Controller;
+use App\Models\Mahasiswa;
 use App\Models\BiodataMahasiswa;
 use Illuminate\Http\Request;
 
 class BiodataController extends Controller
 {
-    public function show($id)
+    public function show($nim)
     {
-        $biodata = BiodataMahasiswa::where('id_mahasiswa', $id)
-            ->first();
+        $mahasiswa = Mahasiswa::where('nim', $nim)->firstOrFail();
+
+        $biodata = BiodataMahasiswa::where('id_mahasiswa', $mahasiswa->id_mahasiswa)->first();
 
         if (!$biodata) {
             return response()->json([
@@ -26,10 +28,12 @@ class BiodataController extends Controller
         ]);
     }
 
-    public function store(Request $request, $id)
+    public function store(Request $request, $nim)
     {
+        $mahasiswa = Mahasiswa::where('nim', $nim)->firstOrFail();
+
         $data = $request->all();
-        $data['id_mahasiswa'] = $id;
+        $data['id_mahasiswa'] = $mahasiswa->id_mahasiswa;
 
         $biodata = BiodataMahasiswa::create($data);
 
@@ -39,16 +43,18 @@ class BiodataController extends Controller
         ], 201);
     }
 
-    public function update(Request $request, $id)
+    public function update(Request $request, $nim)
     {
-        if ($request->jwt_role === 'mahasiswa' && $request->jwt_detail_id != $id) {
+        $mahasiswa = Mahasiswa::where('nim', $nim)->firstOrFail();
+
+        if ($request->jwt_role === 'mahasiswa' && $request->jwt_detail_id != $mahasiswa->id_mahasiswa) {
             return response()->json([
                 'success' => false,
                 'message' => 'Akses ditolak'
             ], 403);
         }
 
-        $biodata = BiodataMahasiswa::where('id_mahasiswa', $id)->first();
+        $biodata = BiodataMahasiswa::where('id_mahasiswa', $mahasiswa->id_mahasiswa)->first();
 
         if (!$biodata) {
             return response()->json([
@@ -65,9 +71,11 @@ class BiodataController extends Controller
         ]);
     }
 
-    public function destroy(Request $request, $id)
+    public function destroy(Request $request, $nim)
     {
-        $biodata = BiodataMahasiswa::where('id_mahasiswa', $id)->first();
+        $mahasiswa = Mahasiswa::where('nim', $nim)->firstOrFail();
+
+        $biodata = BiodataMahasiswa::where('id_mahasiswa', $mahasiswa->id_mahasiswa)->first();
 
         if (!$biodata) {
             return response()->json([
